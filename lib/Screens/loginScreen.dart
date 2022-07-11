@@ -1,5 +1,4 @@
 import 'package:catch_danger/Screens/homeScreen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../main.dart';
 import '../model/UserModel.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,13 +28,34 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //firebase
   final _auth = FirebaseAuth.instance;
+
   // string for displaying the error Message
   String? errorMessage;
 
   @override
   void initState() {
     super.initState();
-
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        showDialog(
+            context: context,
+            builder: (_) {
+              print("Fff" + notification.title.toString());
+              return AlertDialog(
+                title: Text(notification.title.toString()),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text(notification.body.toString())],
+                  ),
+                ),
+              );
+            });
+      }
+    });
     getTopic();
     getToken();
   }
@@ -204,6 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
     token = (await messaging.getToken())!;
     setState(() {
       token = token;
+      print(token);
     });
 
     final DatabaseReference _database = FirebaseDatabase().reference();
