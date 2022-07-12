@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'loginScreen.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const String routeName = 'home';
+
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -15,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-
+Stream<QuerySnapshot> Room=FirebaseFirestore.instance.collection('Room').snapshots();
 
 
   @override
@@ -40,19 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 "Welcome Back",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              // Text("${loggedInUser.firstName} ${loggedInUser.secondName}",
-              //     style: TextStyle(
-              //       color: Colors.indigo,
-              //       fontWeight: FontWeight.w500,
-              //     )),
-              // Text("${loggedInUser.email}",
-              //     style: TextStyle(
-              //       color: Colors.black54,
-              //       fontWeight: FontWeight.w500,
-              //     )),
+
               SizedBox(
                 height: 15,
               ),

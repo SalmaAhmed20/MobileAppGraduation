@@ -1,28 +1,35 @@
 class UserModel {
-  String? uid;
-  String? email;
-  String? firstName;
-  String? secondName;
+  static const COLLECTION_NAME='users';
+  late String uid;
+  late String email;
+  late String firstName;
+  late String secondName;
+  late String password;
 
-  UserModel({this.uid, this.email, this.firstName, this.secondName});
+  UserModel({ required this.uid,
+    required this.email,
+    required this.firstName,
+    required this.secondName,
+    required this.password,
+   });
 
   // receiving data from server
-  factory UserModel.fromMap(map) {
-    return UserModel(
-      uid: map['uid'],
-      email: map['email'],
-      firstName: map['firstName'],
-      secondName: map['secondName'],
+  UserModel.fromJson(Map<String ,dynamic>json):this(
+    uid : json['uid'] as String,
+    email : json['email'] as String,
+    firstName : json['firstName'] as String,
+    secondName : json['secondName'] as String,
+    password : json['password'] as String,
     );
-  }
 
   // sending data to our server
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String , Object>toJson(){
+    return{
       'uid': uid,
       'email': email,
       'firstName': firstName,
       'secondName': secondName,
+      'password': password,
     };
   }
 }

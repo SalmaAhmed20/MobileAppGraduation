@@ -1,3 +1,4 @@
+import 'package:catch_danger/Screens/addUser.dart';
 import 'package:catch_danger/Screens/homeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -18,7 +19,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formkey = GlobalKey<FormState>();
   User? user = FirebaseAuth.instance.currentUser;
-  UserModel loggedInUser = UserModel();
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   late String token;
