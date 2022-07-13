@@ -1,29 +1,29 @@
-import 'package:catch_danger/Screens/addRoom.dart';
 import 'package:catch_danger/model/UserModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../DataBase/DataBaseHelper.dart';
+import '../model/RoomModel.dart';
 import 'homeScreen.dart';
 
 
-class AddUserScreen extends StatefulWidget {
-  static const String routeName = "AddUser";
+class AddRoomScreen extends StatefulWidget {
+  static const String routeName = "AddRoom";
 
   @override
-  _AddUserScreenState createState() => _AddUserScreenState();
+  _AddRoomScreenState createState() => _AddRoomScreenState();
 }
 
-class _AddUserScreenState extends State<AddUserScreen> {
+class _AddRoomScreenState extends State<AddRoomScreen> {
   @override
   final _addKey = GlobalKey<FormState>();
-  String _uid = '';
-  String _email = '';
-  String _password = '';
-  String _firstName = '';
-  String _secondName = '';
+  String _camraIP = '';
+  String _floorNumber = '';
+  String _roomId = '';
+  String _roomName = '';
   bool _obscureText = true;
   bool isLoading = false;
 
@@ -51,10 +51,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   ),
                   TextFormField(
                     onChanged: (newVal) {
-                      _firstName = newVal;
+                      _camraIP = newVal;
                     },
                     decoration: InputDecoration(
-                        labelText: "First Name",
+                        labelText: "Camra IP",
                         labelStyle: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -62,17 +62,17 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         floatingLabelBehavior: FloatingLabelBehavior.auto),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please Enter firstname';
+                        return 'Please Enter camraIP';
                       }
                       return null;
                     },
                   ),
                   TextFormField(
                     onChanged: (newVal) {
-                      _secondName = newVal;
+                      _floorNumber = newVal;
                     },
                     decoration: InputDecoration(
-                        labelText: "Second Name",
+                        labelText: "Floor Number",
                         labelStyle: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -80,17 +80,17 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         floatingLabelBehavior: FloatingLabelBehavior.auto),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please Enter secondname';
+                        return 'Please Enter floorNumber';
                       }
                       return null;
                     },
                   ),
                   TextFormField(
                     onChanged: (newVal) {
-                      _email = newVal;
+                      _roomName = newVal;
                     },
                     decoration: InputDecoration(
-                        labelText: "Email",
+                        labelText: "Room Name",
                         labelStyle: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -98,41 +98,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         floatingLabelBehavior: FloatingLabelBehavior.auto),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter E-mail';
+                        return 'Please enter roomName';
                       }
                       return null;
                     },
-                  ),
-                  TextFormField(
-                    onChanged: (newVal) {
-                      _password = newVal;
-                    },
-                    decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.remove_red_eye_outlined,
-                            size: 28,
-                            color: Colors.indigo,
-                          ),
-                          onPressed: () {
-                            _toggle();
-                          },
-                        ),
-                        labelText: "Password",
-                        labelStyle: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF797979)),
-                        floatingLabelBehavior: FloatingLabelBehavior.auto),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter Password';
-                      } else if (value.length < 6)
-                        return "Password should be at least 6 characters";
-                      return null;
-                    },
-                    onSaved: (val) => _password = val!,
-                    obscureText: _obscureText,
                   ),
                   SizedBox(
                     height: 20,
@@ -147,11 +116,11 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     child: MaterialButton(
                       padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
                       onPressed: () {
-                        CreateUser();
+                        CreateRoom();
 
                       },
                       child:Text(
-                        "Add User",
+                        "Add Room",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.red,
@@ -174,36 +143,29 @@ class _AddUserScreenState extends State<AddUserScreen> {
     });
   }
 
-  void CreateUser() {
+  void CreateRoom() {
     if (_addKey.currentState?.validate() != null) {
-      RegisterUser();
+      RegisterRoom();
     }
   }
 
-  void RegisterUser() async {
+  void RegisterRoom() async {
     setState(() {
       this.isLoading = true;
     });
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-          email: this._email, password: this._password);
-      ShowMessage("Sucess");
-      final userRef =getUsersRefWithConventer();
-      final user = UserModel(uid: userCredential.user!.uid, email: _email,
-          firstName: _firstName, secondName: _secondName, password: _password);
-      userRef.doc(user.uid).set(user).then((value) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomeScreen()),);
+      final docRef =getRoomsCollectionWithConverter().doc();
+      RoomModel room =RoomModel(roomId:docRef.id,
+          roomName: _roomName,
+          floorNumber:_floorNumber,
+          camraIP:_camraIP);
+      docRef.set(room).then((value){
+        setState(() {
+          isLoading=false;
+        });
+        Fluttertoast.showToast(msg: 'Room Added Successfully',
+            toastLength: Toast.LENGTH_LONG);
+        Navigator.pushReplacementNamed(context,  HomeScreen.routeName);
       });
-    } on FirebaseAuthException catch (e) {
-      ShowMessage(e.message ?? "Something went wrong");
-    } catch (e) {
-      print(e);
-    }
-    setState(() {
-      this.isLoading = false;
-    });
   }
 
   void ShowMessage(String message) {
@@ -218,7 +180,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => AddRoomScreen()),);
+                      MaterialPageRoute(builder: (context) => HomeScreen()),);
                   },
                   child: Text("Ok", style: TextStyle(fontFamily: "Poppins")))
             ],

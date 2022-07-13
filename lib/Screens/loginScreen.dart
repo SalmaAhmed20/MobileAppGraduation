@@ -116,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
           )),
     );
 
-    final loginButton = Material(
+      final loginButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
       color: Colors.indigo,
@@ -188,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
             .then((uid) => {
                   Fluttertoast.showToast(msg: "Login Successful"),
                   Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => HomeScreen())),
+                      MaterialPageRoute(builder: (context) => AddUserScreen())),
                 });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {

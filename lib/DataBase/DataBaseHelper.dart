@@ -1,3 +1,4 @@
+import 'package:catch_danger/model/RoomModel.dart';
 import 'package:catch_danger/model/UserModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,14 +12,14 @@ getUsersRefWithConventer() {
   );
 }
 
-// CollectionReference<Room> getRoomsCollectionWithConverter() {
-//   return FirebaseFirestore.instance
-//       .collection(Room.COLLECTION_NAME)
-//       .withConverter<Room>(
-//     fromFirestore: (snapshot, _) => Room.fromJson(snapshot.data()!),
-//     toFirestore: (room, _) => room.toJson(),
-//   );
-// }
+CollectionReference<RoomModel> getRoomsCollectionWithConverter() {
+  return FirebaseFirestore.instance
+      .collection(RoomModel.COLLECTION_NAME)
+      .withConverter<RoomModel>(
+    fromFirestore: (snapshot, _) => RoomModel.fromJson(snapshot.data()!),
+    toFirestore: (Room, _) => Room.toJson(),
+  );
+}
 //
 // CollectionReference<Message> getMessagesCollectionWithConverter(String roomId) {
 //   final roomCollection = getRoomsCollectionWithConverter();
