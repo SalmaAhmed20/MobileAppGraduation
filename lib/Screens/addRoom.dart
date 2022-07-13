@@ -22,9 +22,7 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
   final _addKey = GlobalKey<FormState>();
   String _camraIP = '';
   String _floorNumber = '';
-  String _roomId = '';
   String _roomName = '';
-  bool _obscureText = true;
   bool isLoading = false;
 
   Widget build(BuildContext context) {
@@ -134,13 +132,6 @@ class _AddRoomScreenState extends State<AddRoomScreen> {
             ),
           ))
     ]);
-  }
-
-  //used in show and hide password
-  void _toggle() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
   }
 
   void CreateRoom() {
