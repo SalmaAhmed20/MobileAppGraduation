@@ -1,8 +1,11 @@
+import 'package:catch_danger/Screens/homeScreen.dart';
 import 'package:catch_danger/Screens/loginScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'Screens/ListRoom/homeScreen.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -27,11 +30,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Login',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: LoginScreen(),
+      home: HomeScreen(),
     );
   }
 }

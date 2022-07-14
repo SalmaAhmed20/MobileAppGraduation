@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 
 import 'loginScreen.dart';
 
-class HomeScreen extends StatefulWidget {
+class Home extends StatefulWidget {
   static const String routeName = 'home';
 
-  const HomeScreen({Key? key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeState createState() => _HomeState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeState extends State<Home> {
 
 Stream<QuerySnapshot> Room=FirebaseFirestore.instance.collection('Room').snapshots();
 
