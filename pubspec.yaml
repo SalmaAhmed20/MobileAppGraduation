@@ -28,6 +28,7 @@ dependencies:
   firebase_messaging: ^11.4.4
   firebase_database: ^8.1.0
   flutter_local_notifications: ^9.6.1
+  shared_preferences: ^2.0.6
   flutter:
     sdk: flutter
 

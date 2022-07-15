@@ -1,13 +1,13 @@
-import 'package:catch_danger/Screens/addUser.dart';
-import 'package:catch_danger/Screens/homeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/UserModel.dart';
+import 'HomeScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -35,27 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        showDialog(
-            context: context,
-            builder: (_) {
-              print("Fff" + notification.title.toString());
-              return AlertDialog(
-                title: Text(notification.title.toString()),
-                content: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Text(notification.body.toString())],
-                  ),
-                ),
-              );
-            });
-      }
-    });
+
     getTopic();
     getToken();
   }
@@ -124,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
+
           signIn(emailController.text, passwordController.text);
         },
         child: Text(
@@ -183,12 +164,14 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn(String email, String password) async {
     if (_formkey.currentState!.validate()) {
       try {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('email', emailController.text);
         await _auth
             .signInWithEmailAndPassword(email: email, password: password)
             .then((uid) => {
                   Fluttertoast.showToast(msg: "Login Successful"),
                   Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => AddUserScreen())),
+                      MaterialPageRoute(builder: (context) => HomeScreen())),
                 });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {

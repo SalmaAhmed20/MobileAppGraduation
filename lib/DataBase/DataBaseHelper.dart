@@ -1,7 +1,6 @@
 import 'package:catch_danger/model/RoomModel.dart';
 import 'package:catch_danger/model/UserModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 getUsersRefWithConventer() {
   return FirebaseFirestore.instance
